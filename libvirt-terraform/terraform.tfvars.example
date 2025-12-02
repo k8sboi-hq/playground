@@ -1,0 +1,45 @@
+# Libvirt connection URI
+# Local: qemu:///system
+# Remote: qemu+ssh://user@host/system
+libvirt_uri = "qemu:///system"
+
+# Storage pool configuration
+storage_pool_name = "terraform-pool"
+storage_pool_path = "/var/lib/libvirt/images/terraform"
+
+# VM configuration
+vm_name = "my-test-vm"
+domain  = "local"
+
+# Resources
+memory = 2048  # MB
+vcpu   = 2
+
+# Disk size in bytes (10GB = 10737418240)
+disk_size = 10737418240
+
+# Base OS image URL
+# Fedora 42 (default)
+base_image_url = "/home/khoahd/working/playground/libvirt-terraform/Fedora-Cloud-Base-Generic-42-1.1.x86_64.qcow2"
+# base_image_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-42-1.1.x86_64.qcow2"
+
+
+# CentOS Stream 9 (alternative)
+# base_image_url = "https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2"
+
+# Ubuntu 22.04 LTS (alternative)
+# base_image_url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+
+# Debian 12 (alternative)
+# base_image_url = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+
+# Network configuration
+network_name = "default"
+
+# SSH public key for VM access
+# Generate with: ssh-keygen -t ed25519 -C "terraform-vm"
+# Then copy from: cat ~/.ssh/id_ed25519.pub
+ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... your-email@example.com"
+
+# Default user for the VM
+vm_user = "terraform"

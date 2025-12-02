@@ -20,6 +20,10 @@ There are many things we ((software) engineers) use daily without understanding 
 
   Securing k8s api-server with ImagePolicyWebhook
 
+- [Libvirt Terraform](/libvirt-terraform/README.md)
+
+  Provision virtual machines using Infrastructure as Code with Terraform and libvirt provider
+
 ### Wish list
 
 Open an issue for me
