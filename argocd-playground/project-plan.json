@@ -36,20 +36,21 @@
       "id": "phase-1",
       "name": "Foundation",
       "description": "Basic directory structure and ArgoCD installation",
-      "status": "pending",
+      "status": "completed",
       "order": 1,
       "tasks": [
         {
           "id": "1.1",
           "name": "Create directory structure",
           "description": "Scaffold the argocd-playground folder structure",
-          "status": "pending",
+          "status": "completed",
           "deliverables": [
             "apps/",
             "manifests/",
             "src/",
             "docs/",
-            "exercises/"
+            "exercises/",
+            "scripts/"
           ],
           "dependencies": []
         },
@@ -57,9 +58,12 @@
           "id": "1.2",
           "name": "ArgoCD installation manifests",
           "description": "Write ArgoCD Helm values or Kustomize manifests",
-          "status": "pending",
+          "status": "completed",
           "deliverables": [
-            "manifests/platform/argocd/"
+            "manifests/platform/argocd/kustomization.yaml",
+            "manifests/platform/argocd/namespace.yaml",
+            "manifests/platform/argocd/argocd-cm-patch.yaml",
+            "scripts/install-argocd.sh"
           ],
           "dependencies": ["1.1"]
         },
@@ -67,10 +71,13 @@
           "id": "1.3",
           "name": "Create root-app and platform-apps",
           "description": "Bootstrap Application CRs for App of Apps pattern",
-          "status": "pending",
+          "status": "completed",
           "deliverables": [
             "apps/root-app.yaml",
-            "apps/platform-apps.yaml"
+            "apps/platform-apps.yaml",
+            "apps/team-alpha-apps.yaml",
+            "apps/team-beta-apps.yaml",
+            "apps/kustomization.yaml"
           ],
           "dependencies": ["1.2"]
         },
@@ -78,7 +85,7 @@
           "id": "1.4",
           "name": "Document cluster prerequisites",
           "description": "Write README with setup instructions",
-          "status": "pending",
+          "status": "completed",
           "deliverables": [
             "README.md"
           ],

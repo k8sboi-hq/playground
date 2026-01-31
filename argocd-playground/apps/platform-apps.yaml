@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: platform
+
+  source:
+    # TODO: Update with your repository URL
+    repoURL: https://github.com/YOUR_ORG/argocd-playground.git
+    targetRevision: HEAD
+    path: manifests/platform
+    directory:
+      recurse: true
+      exclude: 'argocd/*'  # ArgoCD is bootstrapped separately
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
