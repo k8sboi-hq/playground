@@ -1,0 +1,375 @@
+{
+  "project": {
+    "name": "argocd-playground",
+    "description": "GitOps playground with ArgoCD, multi-tenancy, Vault integration, and full CI/CD cycle",
+    "version": "0.1.0",
+    "created_at": "2026-01-31",
+    "updated_at": "2026-01-31"
+  },
+  "config": {
+    "pattern": "app-of-apps",
+    "secrets_backend": "hashicorp-vault",
+    "ci_platform": "github-actions",
+    "cd_platform": "argocd",
+    "cluster_mode": "single-cluster",
+    "multi_tenancy": true
+  },
+  "teams": [
+    {
+      "name": "platform",
+      "namespace": "platform",
+      "description": "Platform team managing shared infrastructure"
+    },
+    {
+      "name": "team-alpha",
+      "namespace": "team-alpha",
+      "description": "Application team A"
+    },
+    {
+      "name": "team-beta",
+      "namespace": "team-beta",
+      "description": "Application team B"
+    }
+  ],
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Foundation",
+      "description": "Basic directory structure and ArgoCD installation",
+      "status": "completed",
+      "order": 1,
+      "tasks": [
+        {
+          "id": "1.1",
+          "name": "Create directory structure",
+          "description": "Scaffold the argocd-playground folder structure",
+          "status": "completed",
+          "deliverables": [
+            "apps/",
+            "manifests/",
+            "src/",
+            "docs/",
+            "exercises/",
+            "scripts/"
+          ],
+          "dependencies": []
+        },
+        {
+          "id": "1.2",
+          "name": "ArgoCD installation manifests",
+          "description": "Write ArgoCD Helm values or Kustomize manifests",
+          "status": "completed",
+          "deliverables": [
+            "manifests/platform/argocd/kustomization.yaml",
+            "manifests/platform/argocd/namespace.yaml",
+            "manifests/platform/argocd/argocd-cm-patch.yaml",
+            "scripts/install-argocd.sh"
+          ],
+          "dependencies": ["1.1"]
+        },
+        {
+          "id": "1.3",
+          "name": "Create root-app and platform-apps",
+          "description": "Bootstrap Application CRs for App of Apps pattern",
+          "status": "completed",
+          "deliverables": [
+            "apps/root-app.yaml",
+            "apps/platform-apps.yaml",
+            "apps/team-alpha-apps.yaml",
+            "apps/team-beta-apps.yaml",
+            "apps/kustomization.yaml"
+          ],
+          "dependencies": ["1.2"]
+        },
+        {
+          "id": "1.4",
+          "name": "Document cluster prerequisites",
+          "description": "Write README with setup instructions",
+          "status": "completed",
+          "deliverables": [
+            "README.md"
+          ],
+          "dependencies": ["1.1"]
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "Vault + External Secrets",
+      "description": "Integrate HashiCorp Vault with External Secrets Operator",
+      "status": "pending",
+      "order": 2,
+      "tasks": [
+        {
+          "id": "2.1",
+          "name": "Add Vault Helm chart",
+          "description": "Configure Vault in dev mode for playground",
+          "status": "pending",
+          "deliverables": [
+            "manifests/platform/vault/"
+          ],
+          "dependencies": ["1.3"]
+        },
+        {
+          "id": "2.2",
+          "name": "Add External Secrets Operator",
+          "description": "Install ESO for syncing secrets from Vault",
+          "status": "pending",
+          "deliverables": [
+            "manifests/platform/external-secrets/"
+          ],
+          "dependencies": ["1.3"]
+        },
+        {
+          "id": "2.3",
+          "name": "Configure ClusterSecretStore",
+          "description": "Create ClusterSecretStore pointing to Vault",
+          "status": "pending",
+          "deliverables": [
+            "manifests/platform/external-secrets/cluster-secret-store.yaml"
+          ],
+          "dependencies": ["2.1", "2.2"]
+        },
+        {
+          "id": "2.4",
+          "name": "Create sample ExternalSecret",
+          "description": "Demonstrate secret injection for api-service",
+          "status": "pending",
+          "deliverables": [
+            "manifests/team-alpha/api-service/external-secret.yaml"
+          ],
+          "dependencies": ["2.3"]
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Sample Applications",
+      "description": "Create demo applications for teams",
+      "status": "pending",
+      "order": 3,
+      "tasks": [
+        {
+          "id": "3.1",
+          "name": "Create api-service Go app",
+          "description": "Simple Go HTTP server with Dockerfile",
+          "status": "pending",
+          "deliverables": [
+            "src/api-service/main.go",
+            "src/api-service/go.mod",
+            "src/api-service/Dockerfile"
+          ],
+          "dependencies": ["1.1"]
+        },
+        {
+          "id": "3.2",
+          "name": "Create api-service manifests",
+          "description": "Kubernetes Deployment, Service, ConfigMap",
+          "status": "pending",
+          "deliverables": [
+            "manifests/team-alpha/api-service/deployment.yaml",
+            "manifests/team-alpha/api-service/service.yaml",
+            "manifests/team-alpha/api-service/kustomization.yaml"
+          ],
+          "dependencies": ["3.1"]
+        },
+        {
+          "id": "3.3",
+          "name": "Create web-frontend app",
+          "description": "Static Nginx site with Dockerfile",
+          "status": "pending",
+          "deliverables": [
+            "src/web-frontend/index.html",
+            "src/web-frontend/Dockerfile",
+            "manifests/team-alpha/web-frontend/"
+          ],
+          "dependencies": ["1.1"]
+        },
+        {
+          "id": "3.4",
+          "name": "Create worker-service CronJob",
+          "description": "CronJob workload for team-beta",
+          "status": "pending",
+          "deliverables": [
+            "manifests/team-beta/worker-service/cronjob.yaml",
+            "manifests/team-beta/worker-service/kustomization.yaml"
+          ],
+          "dependencies": ["1.1"]
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "name": "CI Pipeline",
+      "description": "GitHub Actions for building and pushing images",
+      "status": "pending",
+      "order": 4,
+      "tasks": [
+        {
+          "id": "4.1",
+          "name": "Create api-service CI workflow",
+          "description": "Build, test, push image to ghcr.io",
+          "status": "pending",
+          "deliverables": [
+            ".github/workflows/ci-api-service.yaml"
+          ],
+          "dependencies": ["3.1"]
+        },
+        {
+          "id": "4.2",
+          "name": "Implement image tag update",
+          "description": "Automate manifest update after image push",
+          "status": "pending",
+          "deliverables": [
+            ".github/workflows/ci-api-service.yaml (updated)"
+          ],
+          "dependencies": ["4.1", "3.2"],
+          "notes": "Options: Kustomize edit, yq, or dedicated action"
+        },
+        {
+          "id": "4.3",
+          "name": "Create web-frontend CI workflow",
+          "description": "Build and push web-frontend image",
+          "status": "pending",
+          "deliverables": [
+            ".github/workflows/ci-web-frontend.yaml"
+          ],
+          "dependencies": ["3.3"]
+        },
+        {
+          "id": "4.4",
+          "name": "Document CI/CD flow",
+          "description": "Write documentation explaining the pipeline",
+          "status": "pending",
+          "deliverables": [
+            "docs/cicd-flow.md"
+          ],
+          "dependencies": ["4.2"]
+        }
+      ]
+    },
+    {
+      "id": "phase-5",
+      "name": "Multi-tenancy & RBAC",
+      "description": "Configure ArgoCD projects and access control",
+      "status": "pending",
+      "order": 5,
+      "tasks": [
+        {
+          "id": "5.1",
+          "name": "Create AppProjects",
+          "description": "Define ArgoCD projects for each team",
+          "status": "pending",
+          "deliverables": [
+            "apps/projects/platform.yaml",
+            "apps/projects/team-alpha.yaml",
+            "apps/projects/team-beta.yaml"
+          ],
+          "dependencies": ["1.3"]
+        },
+        {
+          "id": "5.2",
+          "name": "Create team-level Applications",
+          "description": "Application CRs for team apps",
+          "status": "pending",
+          "deliverables": [
+            "apps/team-alpha-apps.yaml",
+            "apps/team-beta-apps.yaml"
+          ],
+          "dependencies": ["5.1", "3.2", "3.3", "3.4"]
+        },
+        {
+          "id": "5.3",
+          "name": "Document RBAC model",
+          "description": "Explain multi-tenancy setup",
+          "status": "pending",
+          "deliverables": [
+            "docs/multi-tenancy.md"
+          ],
+          "dependencies": ["5.2"]
+        }
+      ]
+    },
+    {
+      "id": "phase-6",
+      "name": "Break-Fix Exercises",
+      "description": "Hands-on troubleshooting scenarios",
+      "status": "pending",
+      "order": 6,
+      "tasks": [
+        {
+          "id": "6.1",
+          "name": "Drift detection exercise",
+          "description": "Manual edit triggers ArgoCD sync",
+          "status": "pending",
+          "deliverables": [
+            "exercises/01-drift-detection.md"
+          ],
+          "dependencies": ["5.2"]
+        },
+        {
+          "id": "6.2",
+          "name": "Sync failure exercise",
+          "description": "Deploy invalid manifest, troubleshoot",
+          "status": "pending",
+          "deliverables": [
+            "exercises/02-sync-failure.md"
+          ],
+          "dependencies": ["5.2"]
+        },
+        {
+          "id": "6.3",
+          "name": "Rollback exercise",
+          "description": "Revert Git commit, observe rollback",
+          "status": "pending",
+          "deliverables": [
+            "exercises/03-rollback.md"
+          ],
+          "dependencies": ["5.2"]
+        },
+        {
+          "id": "6.4",
+          "name": "Secret rotation exercise",
+          "description": "Rotate Vault secret, verify pod update",
+          "status": "pending",
+          "deliverables": [
+            "exercises/04-secret-rotation.md"
+          ],
+          "dependencies": ["2.4", "5.2"]
+        }
+      ]
+    }
+  ],
+  "future_enhancements": [
+    {
+      "id": "future-1",
+      "name": "ApplicationSets",
+      "description": "Add dynamic app generation with ApplicationSets",
+      "priority": "high"
+    },
+    {
+      "id": "future-2",
+      "name": "Argo Rollouts",
+      "description": "Progressive delivery with canary/blue-green",
+      "priority": "medium"
+    },
+    {
+      "id": "future-3",
+      "name": "Multi-cluster",
+      "description": "Manage remote clusters from ArgoCD",
+      "priority": "low"
+    },
+    {
+      "id": "future-4",
+      "name": "Notifications",
+      "description": "ArgoCD notifications to Slack/Teams",
+      "priority": "low"
+    }
+  ],
+  "metadata": {
+    "total_phases": 6,
+    "total_tasks": 22,
+    "status_options": ["pending", "in_progress", "completed", "blocked"],
+    "collaboration_notes": []
+  }
+}

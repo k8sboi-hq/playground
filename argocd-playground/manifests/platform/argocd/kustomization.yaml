@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+
+resources:
+  - namespace.yaml
+  # Official ArgoCD installation manifest (HA not required for playground)
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.13.3/manifests/install.yaml
+
+patches:
+  # Patch to configure ArgoCD for insecure mode (no TLS termination at ArgoCD)
+  # Useful for playground where ingress/LB handles TLS
+  - target:
+      kind: ConfigMap
+      name: argocd-cmd-params-cm
+    patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: argocd-cmd-params-cm
+      data:
+        # Run server without TLS (ingress handles it)
+        server.insecure: "true"
+        # Enable status badge
+        statusbadge.enabled: "true"
+
+patchesStrategicMerge:
+  - argocd-cm-patch.yaml
